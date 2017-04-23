@@ -1,0 +1,22 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+*.crc
+output.csv
+src/main/resources/car.csv
+src/main/resources/schema.csv
+src/main/resources/lineitem.csv
