@@ -1,3 +1,6 @@
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
@@ -11,8 +14,22 @@ import static org.junit.Assert.assertEquals;
  * Created by mustafa on 23.04.17.
  */
 public class ColumnStoreTest {
+
+    @After
+    public void tearDown() {
+        if (ColumnStore.sparkContext != null) {
+            ColumnStore.sparkContext.stop();
+        }
+    }
+
     @Test
     public void filterWhereTest() throws IOException, URISyntaxException {
+        SparkConf sparkConf = new SparkConf().setAppName("Simple App");
+
+        ///TODO remove this before submission
+        sparkConf.setMaster("local[4]");
+        /////////////////////////////
+        ColumnStore.sparkContext = new JavaSparkContext(sparkConf);
         ColumnStore cs = new ColumnStore();
         cs.parseSchema("attr1:Int,attr2:String");
         cs.loadData("lineitem.csv");
@@ -24,6 +41,7 @@ public class ColumnStoreTest {
         assertEquals(2, cs.filterWhere("attr2|=|Iman").count());
         assertEquals(5, cs.filterWhere("attr1|>=|3").count());
         assertEquals(4, cs.filterWhere("attr1|>|3").count());
+
     }
 
     @Test
