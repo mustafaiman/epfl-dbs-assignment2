@@ -15,6 +15,9 @@
 log/
 target/
 
+src/test/resources/orders.tbl
+src/test/resources/customer.tbl
+
 *.crc
 output.csv
 src/main/resources/car.csv
