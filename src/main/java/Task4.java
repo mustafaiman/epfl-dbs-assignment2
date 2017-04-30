@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
@@ -85,7 +85,8 @@ public class Task4 implements Serializable {
             @Override
             public Iterator<Tuple2<Long, String>> call(Iterator<Tuple2<Long, String>> tuple2Iterator) throws Exception {
                 final ArrayList<Tuple2<Long, String>> elements = new ArrayList<>();
-                final HashSet<Long> keys = new HashSet<>();
+                final ArrayList<Tuple2<Long, String>> results = new ArrayList<>();
+                final HashMap<Long, Integer> keys = new HashMap<>();
 
                 tuple2Iterator.forEachRemaining(new Consumer<Tuple2<Long, String>>() {
                     @Override
@@ -93,20 +94,27 @@ public class Task4 implements Serializable {
                         if (longStringTuple2._2 != null) {
                             elements.add(longStringTuple2);
                         } else {
-                            keys.add(longStringTuple2._1);
+                            Integer oldVal = keys.get(longStringTuple2._1);
+                            if ( oldVal == null) {
+                                keys.put(longStringTuple2._1, 1);
+                            } else {
+                                keys.put(longStringTuple2._1, oldVal+1);
+                            }
                         }
                     }
                 });
-                System.out.println(keys.size());
 
-                for (int i = elements.size() - 1; i >= 0; i--) {
-                    if (!keys.contains(elements.get(i)._1)) {
-                        elements.remove(i);
+
+
+                for (int i = 0; i < elements.size(); i++) {
+                    Integer appearsInCustomer = keys.get(elements.get(i)._1);
+                    if (appearsInCustomer != null) {
+                        for (int k = 0; k < appearsInCustomer; k++) {
+                            results.add(elements.get(i));
+                        }
                     }
                 }
-                System.out.println(elements.size());
-
-                return elements.iterator();
+                return results.iterator();
             }
         }).map(new Function<Tuple2<Long,String>, String>() {
             @Override

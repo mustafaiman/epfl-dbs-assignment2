@@ -15,6 +15,12 @@
 log/
 target/
 
+submission/
+*.pdf
+*.aux
+*.log
+submission.zip
+
 src/test/resources/orders.tbl
 src/test/resources/customer.tbl
 

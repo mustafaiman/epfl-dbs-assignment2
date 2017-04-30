@@ -1,0 +1,29 @@
+\documentclass{article}
+\usepackage{amsmath}
+\title{Exercise 2 - Task 4}
+\author{Mustafa Kamil Iman}
+\begin{document}
+\date{30.04.2017}
+\maketitle
+
+\section{Observations}
+The query has projection over only two columns from the end result of join operation. These are $C\_CUSTKEY$ and $O\_COMMENT$. Projection requires these two columns to be loaded. Join operation requires $C\_CUSTKEY$, $O\_CUSTKEY$ to be loaded. Other than these three columns, we do not need other information. So we simply not load the rest of the columns.
+
+In order to execute a join operation, we need to colocate the entries of two tables with the same $C_CUSTKEY$.
+
+Given $C\_CUSTKEY$ is primary key, it is unique throughput table $CUS$ $TOMER$.
+
+$CUSTOMER$ table is expected to be smaller than $ORDERS$ as one customer may make multiple orders but one order cannot be made by multiple customers.
+
+\section{Partitioning Data}
+Doing local join operations with some part of the data and concatenating the local results at the end is a faster approach than running a complete join operation on whole data. Besides the performance aspect, with a large dataset that does not fit into one machine, it is a neccessity.
+
+Number of partitions is a main factor that will have impact on performance of join operation. However this is not a number that can be optimized without knowledge of memory size of each machine and cluster topology. Therefore number of partitions is hardcoded to be $1024$ in this implementation.
+
+\section{Implementation}
+First, we create two seperate RDDs. One includes $C\_CUSTKEY$ column and the other includes $O\_CUSTKEY$, $O\_COMMENT$. We use $CUSTKEY$ field of each RDD as a key for partitioning.
+
+On each partition of data, we employ local hash joins. Since each part of $CUSTOMER$ table is expected to be smaller than the relevant part of $ORDERS$ we create a set of customer keys from that table. Then outer loop runs on orders and checks for each order if its customer key is in the set. We use a set here because $C\_CUSTKEY$ is primary key of $CUSTOMER$ so it is guaranteed to be unique. 
+
+
+\end{document}
