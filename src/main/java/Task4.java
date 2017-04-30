@@ -40,9 +40,7 @@ public class Task4 implements Serializable {
     public static void main(String[] args) throws IOException, URISyntaxException {
         SparkConf sparkConf = new SparkConf().setAppName("Simple App");
 
-        ///TODO remove this before submission
         sparkConf.setMaster("local[4]");
-        /////////////////////////////
 
         sparkContext = new JavaSparkContext(sparkConf);
 

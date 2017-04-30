@@ -3,12 +3,10 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.spark.SparkConf;
-import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 import scala.Tuple2;
 
@@ -23,12 +21,9 @@ import java.util.HashMap;
  * Created by mustafa on 22.04.17.
  */
 public class CompressedColumnStore implements Serializable {
-
-
     enum DT {
         Int, Str, Fl
     }
-
 
     public static JavaSparkContext sparkContext;
     private HashMap<String, Integer> nameToIndex = new HashMap<>();
@@ -47,9 +42,7 @@ public class CompressedColumnStore implements Serializable {
     public static void main(String[] args) throws IOException, URISyntaxException {
         SparkConf sparkConf = new SparkConf().setAppName("Simple App");
 
-        ///TODO remove this before submission
         sparkConf.setMaster("local[4]");
-        /////////////////////////////
 
         sparkContext = new JavaSparkContext(sparkConf);
 

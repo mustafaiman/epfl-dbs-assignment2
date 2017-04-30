@@ -22,12 +22,9 @@ import java.util.HashMap;
  * Created by mustafa on 22.04.17.
  */
 public class ColumnStore implements Serializable {
-
-
     enum DT {
         Int, Str, Fl
     }
-
 
     public static JavaSparkContext sparkContext;
     private HashMap<String, Integer> nameToIndex = new HashMap<>();
@@ -42,9 +39,7 @@ public class ColumnStore implements Serializable {
     public static void main(String[] args) throws IOException, URISyntaxException {
         SparkConf sparkConf = new SparkConf().setAppName("Simple App");
 
-        ///TODO remove this before submission
         sparkConf.setMaster("local[4]");
-        /////////////////////////////
 
         sparkContext = new JavaSparkContext(sparkConf);
 

@@ -1,26 +1,43 @@
 import java.util.*;
 
 public class Skyline {
-    //a partition that appeared later in partitions array cannot dominate an item from an earlier partition.
     public static ArrayList<Tuple> mergePartitions(ArrayList<ArrayList<Tuple>> partitions) {
-        ArrayList<Tuple> result = partitions.get(0);
-        for (int i = 1; i < partitions.size(); i++) {
-            for (int j = partitions.get(i).size() - 1; j >= 0; j--) {
-                Tuple item = partitions.get(i).get(j);
-                for (Tuple inlist: result) {
-                    if (inlist.dominates(item)) {
-                        partitions.get(i).remove(j);
-                    }
-                }
+        if (partitions.size() == 1) {
+            return nlSkyline(partitions.get(0));
+        } else {
+            ArrayList<ArrayList<Tuple>> other = new ArrayList<>();
+            int middleIndex = (partitions.size() - 1) / 2;
+            for (int i = partitions.size() - 1; i > middleIndex; i--) {
+                other.add(partitions.get(i));
+                partitions.remove(i);
             }
-            result.addAll(partitions.get(i));
+            ArrayList<Tuple> res1 = mergePartitions(partitions);
+            ArrayList<Tuple> res2 = mergePartitions(other);
+            res1.addAll(res2);
+            return nlSkyline(res1);
         }
-        return result;
     }
 
 
     public static ArrayList<Tuple> dcSkyline(ArrayList<Tuple> inputList, int blockSize) {
-        return null;
+        int numBlocks = inputList.size() / blockSize;
+        if (inputList.size() % blockSize > 0)
+            numBlocks++;
+        ArrayList<ArrayList<Tuple>> allTuples = new ArrayList<>(numBlocks);
+        int k = 0;
+        while (!inputList.isEmpty()) {
+            allTuples.add(new ArrayList<>(blockSize));
+            for (int i = 0; i < blockSize; i++) {
+                if (inputList.isEmpty())
+                    break;
+                allTuples.get(k).add(inputList.get(inputList.size() - 1));
+                inputList.remove(inputList.size() - 1);
+            }
+            k++;
+        }
+
+        return mergePartitions(allTuples);
+
     }
 
     public static ArrayList<Tuple> nlSkyline(ArrayList<Tuple> partition) {
